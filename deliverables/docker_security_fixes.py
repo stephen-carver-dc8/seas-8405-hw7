@@ -30,18 +30,35 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \\
         print(f"No changes needed for {dockerfile_path}")
 
 def update_compose(compose_path):
-    content = compose_path.read_text()
-    compose_data = yaml.safe_load(content)
-    modified = False
+    with open(compose_path, 'r') as f:
+        data = yaml.safe_load(f)
 
-    for service in compose_data.get('services', {}).values():
-        if 'user' not in service:
-            service['user'] = '1001:1001'
-            modified = True
-        if 'deploy' not in service:
-            service['deploy'] = {}
-        if 'resources' not in service['deploy']:
-            service['deploy']['resources'] = {
+    services = data.get('services', {})
+
+    # Remove 'db' service if present
+    if 'db' in services:
+        del services['db']
+
+    # Ensure 'frontend' network exists
+    data['networks'] = {'frontend': None}
+
+    # Update 'web' service
+    if 'web' in services:
+        web = services['web']
+        web['image'] = 'mywebapp_after'
+        web['ports'] = ['127.0.0.1:15001:5000']
+        web['read_only'] = True
+        web['security_opt'] = ['no-new-privileges:true']
+        web['user'] = '1001:1001'
+        web['env_file'] = ['.env']
+        web['networks'] = ['frontend']
+
+        # Remove deprecated keys
+        web.pop('depends_on', None)
+
+        # Add deploy resources
+        web['deploy'] = {
+            'resources': {
                 'limits': {
                     'cpus': '0.50',
                     'memory': '512M'
@@ -51,14 +68,12 @@ def update_compose(compose_path):
                     'memory': '256M'
                 }
             }
-            modified = True
+        }
 
-    if modified:
-        with open(compose_path, 'w') as f:
-            yaml.dump(compose_data, f, default_flow_style=False)
-        print(f"Updated {compose_path}")
-    else:
-        print(f"No changes needed for {compose_path}")
+    with open(compose_path, 'w') as f:
+        yaml.dump(data, f, default_flow_style=False)
+
+    print(f"Transformed: {compose_path}")
 
 def update_daemon_json(path):
     default_config = {

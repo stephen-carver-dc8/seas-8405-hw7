@@ -1,18 +1,24 @@
+networks:
+  frontend: null
 services:
   web:
     build: .
-    image: mywebapp_after
-    ports:
-      - "127.0.0.1:15001:5000"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     env_file:
-      - .env
+    - .env
+    image: mywebapp_after
+    networks:
+    - frontend
+    ports:
+    - 127.0.0.1:15001:5000
     read_only: true
     security_opt:
-      - no-new-privileges:true
-    mem_limit: 256m
-    pids_limit: 100
-    networks:
-      - frontend
-  
-networks:
-  frontend:
+    - no-new-privileges:true
+    user: 1001:1001
