@@ -19,10 +19,6 @@ host-security:
 dbuild: check
 	docker build -t mywebapp .
 
-# Run the container
-run:
-	docker run -p 6000:5000 mywebapp
-
 # Scan the built image for vulnerabilities
 scan:
 	docker scout recommendations mywebapp:latest
@@ -43,7 +39,7 @@ logs:
 clean:
 	docker system prune -f
 
-full-start:
+reset: stop clean
 	docker compose up -d --build
 
 restart: stop start

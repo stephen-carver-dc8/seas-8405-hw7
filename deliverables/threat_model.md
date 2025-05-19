@@ -39,6 +39,8 @@ This document outlines the threat modeling exercise performed on the initial ins
 | No network restrictions | Isolate with Docker networks | NIST 800-53: SC-7 |
 | Missing health check | Add `HEALTHCHECK` | CIS Docker Benchmark |
 | Unvalidated inputs | Strict input validation | OWASP Top 10: A1-Injection |
+| Untrusted image sources | Implement image signing/verification | NIST 800-53: SI-7(12) |
+| Lack of monitoring | Use centralized logging, add Flask logging | NIST 800-53: AU-6 |
 
 ---
 
@@ -57,3 +59,14 @@ This document outlines the threat modeling exercise performed on the initial ins
 
 This threat model identifies the major flaws in the system and informs the remediation and architecture redesign. The final implementation significantly reduces the attack surface and enforces least privilege, defense in depth, and secure defaults.
 
+
+## 7. Recommendations
+
+- Implement authentication (e.g., API keys or tokens) for all endpoints.
+- Replace `eval()` with safe parsing alternatives (e.g., `ast.literal_eval`).
+- Restrict the `ping` endpoint to validated IPv4 input and run it without `shell=True`.
+- Move all secrets to environment variables and remove them from source.
+- Add logging for access and errors using Flask middleware or external solutions.
+- Drop root privileges in Dockerfile using `USER appuser`.
+- Ensure networks in `docker-compose.yml` are isolated per principle of least privilege.
+- Enable `HEALTHCHECK` and resource limits in `docker-compose.yml`.

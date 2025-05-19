@@ -1,0 +1,46 @@
+@startuml
+skinparam defaultTextAlignment center
+skinparam componentStyle rectangle
+
+actor "User's Browser" as User
+
+package "Docker Container" as Container {
+  component "Flask Web App\n(app.py)" as FlaskApp
+  component "Python Runtime\n(Flask, Pydantic, dotenv)" as PythonRT
+
+  entity "/ (GET)" as EndpointRoot
+  entity "/ping (GET)" as EndpointPing
+  entity "/calculate (GET)" as EndpointCalc
+
+  file ".env\n(PASSWORD)" as Env
+
+  FlaskApp --> EndpointRoot : Handles
+  FlaskApp --> EndpointPing : Handles
+  FlaskApp --> EndpointCalc : Handles
+
+  FlaskApp <-- Env : Loads env var
+  FlaskApp --> PythonRT : Runs in
+}
+
+package "Host System" {
+  component "Docker Compose" as Compose
+  component "Host OS\n(Docker Engine)" as Host
+
+  file ".env\n(PASSWORD)" as EnvHost
+  file "Dockerfile" as Dockerfile
+  file "requirements.txt" as Requirements
+
+  Compose --> Container : Starts container\nInjects env
+  Compose <-- EnvHost : Loads
+  Compose <-- Dockerfile : Builds image
+  Compose <-- Requirements : Installs deps
+
+  Env <-- EnvHost : Shared
+
+  Host --> Compose : Executes
+}
+
+User --> EndpointRoot : HTTP GET
+User --> EndpointPing : HTTP GET
+User --> EndpointCalc : HTTP GET
+@enduml

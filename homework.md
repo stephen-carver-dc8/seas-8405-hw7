@@ -29,37 +29,37 @@ In this assignment, you will assume the role of a **cybersecurity architect** ta
 
 1. **Code Remediation:**
    - Refactor `app.py` to:
-     - Eliminate hardcoded passwords.
-     - Replace `eval()` with `ast.literal_eval`.
-     - Validate all inputs.
-     - Restrict Flask to localhost.
+     X Eliminate hardcoded passwords.
+     X Replace `eval()` with `ast.literal_eval`.
+     X Validate all inputs.
+     X Restrict Flask to localhost.
 
 2. **Docker Hardening:**
-   - Use a minimal base image.
-   - Ensure the app runs as a non-root user.
-   - Add a `HEALTHCHECK` directive.
+   X Use a minimal base image.
+   X Ensure the app runs as a non-root user.
+   X Add a `HEALTHCHECK` directive.
    - Implement multi-stage builds if possible.
 
 3. **docker-compose.yml Improvements:**
-   - Add `read_only`, `security_opt`, `mem_limit`, and `pids_limit`.
-   - Restrict port exposure to `127.0.0.1`.
-   - Use `.env` files for secret handling.
+   X Add `read_only`, `security_opt`, `mem_limit`, and `pids_limit`.
+   X Restrict port exposure to `127.0.0.1`.
+   X Use `.env` files for secret handling.
 
 ### Part 3: Threat Modeling
 
 1. **Threat Model Documentation:**
-   - Perform STRIDE analysis on the app.
-   - Use MITRE ATT&CK for Containers to identify relevant techniques.
-   - Create a table mapping vulnerabilities to controls (e.g., NIST 800-53).
+   X Perform STRIDE analysis on the app.
+   X Use MITRE ATT&CK for Containers to identify relevant techniques.
+   X Create a table mapping vulnerabilities to controls (e.g., NIST 800-53).
 
 2. **Save and Submit:**
-   - Write results in `deliverables/threat_model.md`.
+   X Write results in `deliverables/threat_model.md`.
 
 ### Part 4: Security Architecture Implementation
 
 1. **Architecture Design:**
-   - Draft a diagram showing the hardened app infrastructure (use tools like Lucidchart or draw.io).
-   - Save as `deliverables/architecture_diagram.png`.
+   X Draft a diagram showing the hardened app infrastructure (use tools like Lucidchart or draw.io).
+   X Save as `deliverables/architecture_diagram.png`.
 
 2. **Auto-Hardening Script:**
    - Write a Python script (`docker_security_fixes.py`) to:

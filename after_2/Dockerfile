@@ -3,8 +3,8 @@ FROM python:3.12-slim
 # Set working directory
 WORKDIR /app
 
-# Get curl and ping
-RUN apt-get update && apt-get install -y iputils-ping curl && rm -rf /var/lib/apt/lists/*
+# Get ping
+RUN apt-get update && apt-get install -y iputils-ping && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 COPY requirements.txt .
