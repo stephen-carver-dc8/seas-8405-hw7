@@ -1,9 +1,9 @@
 services:
   web:
     build: .
-    image: mywebapp_after
+    image: mywebapp_after2
     ports:
-      - "127.0.0.1:15001:5000"
+      - "127.0.0.1:15002:5000"
     env_file:
       - .env
     read_only: true

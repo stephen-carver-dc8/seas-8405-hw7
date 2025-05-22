@@ -1,11 +1,11 @@
 # Pre-build security checks
 check:
 	@echo "Running code analysis with Bandit..."
-	@docker run --rm -v $(PWD):/app python:3.9-alpine \
+	@docker run --rm -v $(PWD):/app python:slim \
 		sh -c "set -e && pip install --no-cache-dir bandit && bandit -r /app"; \
 	BANDIT_EXIT=$$?; \
 	echo "Running dependency check with pip-audit..."; \
-	docker run --rm -v $(PWD):/app python:3.9-alpine \
+	docker run --rm -v $(PWD):/app python:slim \
 		sh -c "set -e && pip install --no-cache-dir pip-audit && pip-audit -r /app/requirements.txt"; \
 	AUDIT_EXIT=$$?; \
 	exit $$((BANDIT_EXIT || AUDIT_EXIT))
@@ -19,13 +19,9 @@ host-security:
 dbuild: check
 	docker build -t mywebapp .
 
-# Run the container
-run:
-	docker run -p 6000:5000 mywebapp
-
 # Scan the built image for vulnerabilities
 scan:
-	docker scout recommendations mywebapp:latest
+	docker scout recommendations mywebapp_after2:latest
 
 # Docker Compose commands
 build:
@@ -43,7 +39,7 @@ logs:
 clean:
 	docker system prune -f
 
-full-start:
+reset: stop clean
 	docker compose up -d --build
 
 restart: stop start

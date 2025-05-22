@@ -20,16 +20,19 @@ make check
     This does not work as written. It only runs the first command. For now we will evaluate its output.
 
     We will now manually run the second command and evaluate its output.
-    docker run --rm -v $(PWD):/app python:3.9-alpine sh -c "pip install pip-audit && pip-audit -r /app/requirements.txt"
+    docker run --rm -v $(pwd):/app python:3.9-alpine sh -c "pip install pip-audit && pip-audit -r /app/requirements.txt"
 
 make scan
 
 make host-security
 
     These tools are not perfect. Notice it is warning about this file having incorrect ownership, when infact the ownership matches its expectations.
-    ls -al .........
 
-cd after
+    [WARN] 3.15  - Ensure that Docker socket file ownership is set to root:docker
+    [WARN]      * Wrong ownership for /var/run/docker.sock
+    ls -al /var/run/docker.sock
+
+cd ../after
 
 app.py
     - Hardcoded secrets moved to ENV
@@ -50,6 +53,15 @@ docker-compose.yaml
     Use `.env` files for secret handling.
 
 Makefile
+    fix make check to allow non zero exits
+
+make start
+
+curl -w "\n" http://localhost:15001/
+
+Must be done from inside container because of the flask restriction to local host
+
+docker exec -it after-web-1 /bin/bash
 
 curl -w "\n" http://localhost:5000/
 curl -w "\n" http://localhost:5000/?name=Stephen
@@ -59,16 +71,31 @@ curl -w "\n" http://localhost:5000/calculate?expr=2%2B2
 curl -w "\n" http://localhost:5000/calculate?expr=%222%2B2%22
 curl -w "\n" http://localhost:5000/calculate?expr=globals%28%29%5B%27PASSWORD%27%5D
 
+exit
+
 make check
+
+echo $?
 
 make scan
 
 make host-security
 
+cd ../after2
 
-curl -w "\n" http://localhost:15001/
-curl -w "\n" http://localhost:15001/?name=Stephen
-curl -w "\n" http://localhost:15001/ping?ip=8.8.8.8
-curl -w "\n" "http://localhost:15001/ping?ip=127.0.0.1;%20cat%20/etc/passwd"
-curl -w "\n" http://localhost:15001/calculate?expr=2%2B2
-curl -w "\n" http://localhost:15001/calculate?expr=globals%28%29%5B%27PASSWORD%27%5D
+make start
+
+curl -w "\n" http://localhost:15002/
+curl -w "\n" http://localhost:15002/?name=Stephen
+curl -w "\n" http://localhost:15002/ping?ip=8.8.8.8
+curl -w "\n" "http://localhost:15002/ping?ip=127.0.0.1;%20cat%20/etc/passwd"
+curl -w "\n" http://localhost:15002/calculate?expr=2%2B2
+curl -w "\n" http://localhost:15002/calculate?expr=globals%28%29%5B%27PASSWORD%27%5D
+
+make check
+
+echo $?
+
+make scan
+
+make host-security

@@ -42,7 +42,7 @@ def ping():
         return jsonify({"error": "Invalid IPv4 address"}), 400
 
     try:
-        result = subprocess.check_output(["ping", "-c", "1", str(validated.ip)], text=True)
+        result = subprocess.check_output(["/usr/bin/ping", "-c", "1", str(validated.ip)], text=True)
         return result
     except Exception as e:
         return jsonify({"error": "Ping failed"}), 500

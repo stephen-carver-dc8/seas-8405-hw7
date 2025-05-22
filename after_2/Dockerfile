@@ -1,10 +1,10 @@
-FROM python:3.12-slim
+FROM python:slim
 
 # Set working directory
 WORKDIR /app
 
 # Get ping
-RUN apt-get update && apt-get install -y iputils-ping && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y curl iputils-ping && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 COPY requirements.txt .
@@ -16,6 +16,7 @@ RUN adduser --disabled-password --gecos '' appuser
 # Copy application code and fix permissions
 COPY . .
 RUN chown -R appuser:appuser /app
+RUN chmod +x healthcheck.sh
 
 # Switch to the non-root user
 USER appuser
@@ -28,4 +29,4 @@ CMD ["python", "app.py"]
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:5000/ || exit 1
+  CMD healthcheck.sh
