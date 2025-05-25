@@ -10,6 +10,7 @@
 
 curl -w "\n" http://localhost:15000/
 curl -w "\n" http://localhost:15000/?name=Stephen
+curl -w "\n" http://localhost:15000/?name=Stephen;123
 curl -w "\n" http://localhost:15000/ping?ip=8.8.8.8
 curl -w "\n" "http://localhost:15000/ping?ip=127.0.0.1;%20cat%20/etc/passwd"
 curl -w "\n" http://localhost:15000/calculate?expr=2%2B2
