@@ -62,9 +62,9 @@ In this assignment, you will assume the role of a **cybersecurity architect** ta
    X Save as `deliverables/architecture_diagram.png`.
 
 2. **Auto-Hardening Script:**
-   - Write a Python script (`docker_security_fixes.py`) to:
-     - Update `daemon.json` with hardening flags.
-     - Inject `USER`, `HEALTHCHECK`, and limits into Dockerfile and Compose.
+   X Write a Python script (`docker_security_fixes.py`) to:
+     X Update `daemon.json` with hardening flags.
+     X Inject `USER`, `HEALTHCHECK`, and limits into Dockerfile and Compose.
 
 ### Part 5: Recording the Simulation
 
